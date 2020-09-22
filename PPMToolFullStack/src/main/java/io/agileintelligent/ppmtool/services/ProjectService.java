@@ -32,4 +32,11 @@ public class ProjectService {
         return Flux.defer(() -> Flux.fromIterable(projectRepository.findAll()))
                 .subscribeOn(jdbcScheduler);
     }
+
+    public Mono<Integer> deleteProject(Long projectId) {
+        return Mono.fromCallable(() -> transactionTemplate.execute(status -> {
+            projectRepository.deleteById(projectId);
+            return 0;
+        })).subscribeOn(jdbcScheduler);
+    }
 }
